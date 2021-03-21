@@ -30,7 +30,7 @@ jobs:
       run: ls -l dist/
 
     - name: s3 cp
-      run: aws s3 cp target s3://node-test-20210321 --recursive
+      run: aws s3 cp dist s3://node-test-20210321 --recursive
 
     - name: s3 ls
       run: aws s3 ls s3://node-test-20210321
