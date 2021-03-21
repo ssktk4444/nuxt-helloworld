@@ -1,0 +1,39 @@
+name: Nuxt.js hello world !!
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Node.js 14
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14.x'
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-1
+
+    - name: Build with npm
+      run: npm run generate
+
+    - name: ls
+      run: ls -l dist/
+
+    - name: s3 cp
+      run: aws s3 cp target s3://node-test-20210321 --recursive
+
+    - name: s3 ls
+      run: aws s3 ls s3://node-test-20210321
+
+#    - name: Run command for deploy
+#      run: aws ssm send-command --document-name "deploy-node" --targets '[{"Key":"InstanceIds","Values":["i-09acafdf9e3db2139"]}]'
